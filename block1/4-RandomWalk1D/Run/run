@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+#
+
+time ../Source/random1d
+
+exit

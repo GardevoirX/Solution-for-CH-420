@@ -1,0 +1,4 @@
+#!/usr/bin/bash 
+#
+time ../Source/boltzmann
+exit
