@@ -12,6 +12,7 @@ int main(void)
   int i,j,k;
   int NumberOfCyles;
   double PressureSum,PressureCount,Pressure;
+  double CvSum,CvCount;
   double ChemicalPotentialSum,ChemicalPotentialCount,Dummy1,Dummy2;
   double EnergySquaredSum,EnergySum,EnergyCount;
   VECTOR pos;
@@ -28,6 +29,8 @@ int main(void)
   NumberOfCyles=0;
   PressureSum=0.0;
   PressureCount=0.0;
+  CvSum=0.0;
+  CvCount=0.0;
   ChemicalPotentialSum=0.0;
   ChemicalPotentialCount=0.0;
   EnergySquaredSum=0.0;
@@ -85,6 +88,9 @@ int main(void)
           // start modification question 4
           // Heat capacity. You can use variables EnergySum, EnergyCount,
           // and EnergySquaredSum.
+          EnergySquaredSum+=SQR(RunningEnergy);
+          EnergySum+=RunningEnergy;
+          EnergyCount+=1.0;
 
           // end modification
 
@@ -153,6 +159,8 @@ int main(void)
       {
         printf("Average Pressure                  : %lf\n",
           PressureSum/PressureCount);
+        printf("Average heat capacity             : %lf\n",
+          CvSum/CvCount);
         printf("Chemical Potential                : %lf\n",
            -(1.0/Beta)*
            (log((ChemicalPotentialSum/ChemicalPotentialCount)/(NumberOfParticles/CUBE(Box))))

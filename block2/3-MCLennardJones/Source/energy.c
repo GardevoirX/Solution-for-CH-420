@@ -34,7 +34,7 @@ void EnergyParticle(VECTOR pos,int i,int jb,double *En,double *Vir)
         Enij+=4.0*Epsilon*(SQR(r6i)-r6i);
 
         // start modification virial
-
+        Virij+=4.0*Epsilon*(-12.0*SQR(r6i)+6.0*r6i);
         // end modification virial
       }
     }
