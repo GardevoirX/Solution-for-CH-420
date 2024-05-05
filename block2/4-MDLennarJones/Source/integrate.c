@@ -33,7 +33,9 @@ void Integrate(double Step,VECTOR *Momentum)
   // recalculated !!!!
 
   if(Step<NumberOfInitializationSteps)
-    Scale=sqrt(Temperature*(3.0*NumberOfParticles-3.0)/(2.0*UKinetic));
+
+    // Scale=sqrt(Temperature*(3.0*NumberOfParticles-3.0)/(2.0*UKinetic));
+    Scale=sqrt(Temperature*(3.0*NumberOfParticles-4.0)/(2.0*UKinetic));
   else
     Scale=1.0;
  
@@ -54,9 +56,9 @@ void Integrate(double Step,VECTOR *Momentum)
     (*Momentum).y+=Velocities[i].y;
     (*Momentum).z+=Velocities[i].z;
  
-    NewPositions[i].x=OldPositions[i].x+Velocities[i].x*Deltat;
-    NewPositions[i].y=OldPositions[i].y+Velocities[i].y*Deltat;
-    NewPositions[i].z=OldPositions[i].z+Velocities[i].z*Deltat;
+    NewPositions[i].x=OldPositions[i].x+Velocities[i].x*2*Deltat;
+    NewPositions[i].y=OldPositions[i].y+Velocities[i].y*2*Deltat;
+    NewPositions[i].z=OldPositions[i].z+Velocities[i].z*2*Deltat;
 
     PositionsNONPDB[i].x+=NewPositions[i].x-Positions[i].x;
     PositionsNONPDB[i].y+=NewPositions[i].y-Positions[i].y;

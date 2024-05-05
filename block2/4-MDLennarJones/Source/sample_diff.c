@@ -40,6 +40,7 @@ void SampleDiff(int Switch)
         SampleCounter[i]=0;
         Vacf[i]=0.0;
       }
+      Vacf[0]=1.0;
       break;
     case SAMPLE:
       time++;
@@ -56,6 +57,18 @@ void SampleDiff(int Switch)
 
         // start modification
 
+        t0Counter++;
+        t0index=t0Counter%MAXT0;
+        t0time[t0index]=time;
+        for(i=0;i<NumberOfParticles;i++)
+        {
+          Vxt0[i][t0index]=Velocities[i].x;
+          Vyt0[i][t0index]=Velocities[i].y;
+          Vzt0[i][t0index]=Velocities[i].z;
+          Rx0[i][t0index]=PositionsNONPDB[i].x;
+          Ry0[i][t0index]=PositionsNONPDB[i].y;
+          Rz0[i][t0index]=PositionsNONPDB[i].z;
+        }
 
         // end modification
       }
@@ -64,6 +77,21 @@ void SampleDiff(int Switch)
 
       // start modification
 
+      for(i=0;i<MIN(t0Counter, MAXT0);i++)
+      {
+        CorrelTime=time-t0time[i];
+        if (CorrelTime < MAXT)
+        {
+          
+          SampleCounter[CorrelTime]+=1;
+          for (j=0;j<NumberOfParticles;j++)
+          {
+            
+            R2[CorrelTime]+=SQR(PositionsNONPDB[j].x-Rx0[j][i])+SQR(PositionsNONPDB[j].y-Ry0[j][i])+SQR(PositionsNONPDB[j].z-Rz0[j][i]);
+            Vacf[CorrelTime]+=Vxt0[j][i]*Velocities[j].x+Vyt0[j][i]*Velocities[j].y+Vzt0[j][i]*Velocities[j].z;
+          }
+        }
+      }
       // end modification
       break;
     case WRITE_RESULTS:
