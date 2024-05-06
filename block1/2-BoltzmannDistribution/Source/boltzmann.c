@@ -37,12 +37,14 @@ int main(void)
 
   for(i=0;i<NumberOfEnergyLevels;i++)
   {
-     // start modification
-    tmp=(2 * i + 1) * exp(-(i * (i + 1) * 0.5) * Beta);
-     // end modification
+    // start modification
+    // tmp=exp(-i * Beta);
+    // tmp=(i+1) * exp(-i * Beta);
+    tmp=(2*i+1) * exp(-(i * (i+1) * 0.5) * Beta);
+    // end modification
 
-     Distribution[i]=tmp;
-     Normalize+=tmp;
+    Distribution[i]=tmp;
+    Normalize+=tmp;
   }
 
   // Write Results 
