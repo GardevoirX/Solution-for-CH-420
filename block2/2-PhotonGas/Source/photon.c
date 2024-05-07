@@ -5,11 +5,17 @@
 #include "ran_uniform.h"
 
 #define CycleMultiplication 1000
+#define MaxEnergyLevel 100000
 
 int main(void)
 {
   int  NumberOfCycles,NumberOfInitializationSteps,New,Old,i,j;
+  int maxold=0;
   double Beta,Sum,Count;
+  int Distribution[MaxEnergyLevel];
+  FILE *FilePtr;
+
+  for (i=0;i<MaxEnergyLevel;i++) Distribution[i]=0;
       
   // initialize the random number generator with the system time
   InitializeRandomNumberGenerator(time(0l));
@@ -44,10 +50,14 @@ int main(void)
       if (RandomNumber()<0.5)
       {
         New = Old + 1;
+        // New = Old + floor(RandomNumber() * 6);
+        // New = Old + 3;
       }
       else
       {
-          New = Old - 1;
+        New = Old - 1;
+        // New = Old - floor(RandomNumber() * 6);
+        // New = Old - 3;
       }
       if (New < 0)
       {
@@ -66,6 +76,8 @@ int main(void)
       {
         Sum+=Old;
         Count+=1.0;
+        if (Old>maxold) maxold=Old;
+        Distribution[Old]++;
       }
     }
   }
@@ -75,6 +87,14 @@ int main(void)
   printf("Average Value     : %lf\n",Sum/Count);
   printf("Theoretical Value : %lf\n",1.0/(exp(Beta)-1.0));
   printf("Relative Error    : %lf\n",fabs((exp(Beta)-1.0)*((Sum/Count) - (1.0/(exp(Beta)-1.0)))));
+
+  FilePtr=fopen("distribution.dat","w");
+
+  for(i=0;i<maxold;i++)
+  {
+    fprintf(FilePtr,"%d, %f\n",i,Distribution[i] / Count);
+  }
+  fclose(FilePtr);
 
   return 0;
 }
