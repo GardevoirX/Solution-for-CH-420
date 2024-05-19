@@ -120,7 +120,33 @@ int main(void)
         // select temperatures at random 
 
         // start modification
-
+        SystemA = (int)(NumberOfSystems*RandomNumber());
+        while (1)
+        {
+          SystemB = (int)(NumberOfSystems*RandomNumber());
+          if (SystemB!=SystemA) break;
+        }
+        
+        
+        SwapCount[SystemA] += 1.0;
+        SwapCount[SystemB] += 1.0;
+        if (RandomNumber() < exp((Beta[SystemA] - Beta[SystemB]) * (Uold[SystemA] - Uold[SystemB])))
+        {
+          for (j = 0; j < NUMBEROFPARTICLES; j++)
+          {
+            swap = Positions[j][SystemA].x;
+            Positions[j][SystemA].x = Positions[j][SystemB].x;
+            Positions[j][SystemB].x = swap;
+            swap = Positions[j][SystemA].y;
+            Positions[j][SystemA].y = Positions[j][SystemB].y;
+            Positions[j][SystemB].y = swap;
+          }
+          swap = Uold[SystemA];
+          Uold[SystemA] = Uold[SystemB];
+          Uold[SystemB] = swap;
+          SwapSum[SystemA] += 1.0;
+          SwapSum[SystemB] += 1.0;
+        }
         // end modification
       }
       else
