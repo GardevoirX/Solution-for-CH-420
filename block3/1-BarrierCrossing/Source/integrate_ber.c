@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "system.h"
+#include "ran_uniform.h"
 
 // integrate the equations of motion for an NVE system
 // use either velocity verlet or leap-frog. you do not
@@ -25,11 +26,19 @@ void IntegrateBerendsen(void)
   // Integration of equations of motion: Leap Frog.
   Force(Position,&U,&F);
   //determine lambda
-  Ekin = Velocity*Velocity
+  Ekin = Velocity*Velocity;
   //begin modification
+  if (Ekin < 0.001)
+  {
+    Ekin = 0.001;
+  }
+  Berendsen = (Tstep / tau) * (Temperature - Ekin);
+  Stoch = 2 * sqrt((Temperature) * Ekin * (Tstep / tau)) * RandomGaussianNumber();
+  Scale = Berendsen + Stoch;
 
   //end modification
-  lambda = sqrt((Ekin + Scale)/Ekin);
+
+  lambda = sqrt(fabs(Ekin + Scale) / Ekin);
   
   NewVelocity=lambda*(Velocity+Tstep*F);
   Position+=Tstep*NewVelocity;

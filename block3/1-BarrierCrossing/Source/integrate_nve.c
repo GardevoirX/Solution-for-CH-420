@@ -22,12 +22,13 @@ void IntegrateNVE(void)
   double U,F,NewVelocity;
 
   // start modification
-  NewVelocity += F * Tstep / 2;
+  // Force(Position,&U,&F);
+  NewVelocity = Velocity + OldF * Tstep / 2;
   Position += NewVelocity * Tstep;
   Force(Position,&U,&F);
   NewVelocity += F * Tstep / 2;
   Velocity = NewVelocity;
-  
+  OldF = F;
 
   // end modification
 } 

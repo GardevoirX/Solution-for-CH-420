@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 data = np.loadtxt('../msd.dat')
 
 position = data[:, 0]
-msd = data[:, 1]
+msd = data[:, 2]
 
 plt.plot(position, msd)
 plt.xlabel('Position')
