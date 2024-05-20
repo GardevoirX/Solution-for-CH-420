@@ -1,3 +1,9 @@
+*.log
+*.txt
+*.input
+*.dat
+output*
+
 # Prerequisites
 *.d
 
