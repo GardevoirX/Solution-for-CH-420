@@ -113,3 +113,188 @@ void Integrate(double Step,VECTOR *Momentum)
   // add the kinetic part of the pressure
   Pressure+=2.0*UKinetic*NumberOfParticles/(CUBE(Box)*(3.0*NumberOfParticles));
 }
+
+void VelocityVerlet(double Step,VECTOR *Momentum)
+{
+  int i;
+  double Scale;
+  VECTOR NewPositions[MAXPART];
+  
+
+  UKinetic=0.0;
+  for(i=0;i<NumberOfParticles;i++)
+  {   
+    
+    Velocities[i].x+=Forces[i].x*Deltat/2;
+    Velocities[i].y+=Forces[i].y*Deltat/2;
+    Velocities[i].z+=Forces[i].z*Deltat/2;
+
+    NewPositions[i].x=Positions[i].x+Velocities[i].x*Deltat;
+    NewPositions[i].y=Positions[i].y+Velocities[i].y*Deltat;
+    NewPositions[i].z=Positions[i].z+Velocities[i].z*Deltat;
+
+  }
+  for(i=0;i<NumberOfParticles;i++)
+  {
+    PositionsNONPDB[i].x+=NewPositions[i].x-Positions[i].x;
+    PositionsNONPDB[i].y+=NewPositions[i].y-Positions[i].y;
+    PositionsNONPDB[i].z+=NewPositions[i].z-Positions[i].z;
+ 
+    Positions[i].x=NewPositions[i].x;
+    Positions[i].y=NewPositions[i].y;
+    Positions[i].z=NewPositions[i].z;
+
+    // put particles back in the box
+    // the previous position has the same transformation (Why ?)
+    if(Positions[i].x>=Box)
+    {
+      Positions[i].x-=Box;
+    }
+    else if (Positions[i].x<0.0)
+    {
+      Positions[i].x+=Box;
+    }
+ 
+    if(Positions[i].y>=Box)
+    {
+      Positions[i].y-=Box;
+    }
+    else if(Positions[i].y<0.0)
+    {
+      Positions[i].y+=Box;
+    }
+ 
+    if(Positions[i].z>=Box)
+    {
+      Positions[i].z-=Box;
+    }
+    else if(Positions[i].z<0.0)
+    {
+      Positions[i].z+=Box;
+    }
+  }
+  Force();
+  for(i=0;i<NumberOfParticles;i++)
+  {   
+    
+    Velocities[i].x+=Forces[i].x*Deltat/2;
+    Velocities[i].y+=Forces[i].y*Deltat/2;
+    Velocities[i].z+=Forces[i].z*Deltat/2;
+
+    UKinetic+=0.5*(SQR(Velocities[i].x)+SQR(Velocities[i].y)+SQR(Velocities[i].z));
+  }
+  if(Step<NumberOfInitializationSteps)
+
+    // Scale=sqrt(Temperature*(3.0*NumberOfParticles-3.0)/(2.0*UKinetic));
+    Scale=sqrt(Temperature*(3.0*NumberOfParticles-4.0)/(2.0*UKinetic));
+  else
+    Scale=1.0;
+ 
+  (*Momentum).x=0.0;
+  (*Momentum).y=0.0;
+  (*Momentum).z=0.0;
+ 
+  // scale velocities and put particles back in the box
+  // beware: the old positions are also put back in the box 
+  for(i=0;i<NumberOfParticles;i++)
+  {
+    Velocities[i].x*=Scale;
+    Velocities[i].y*=Scale;
+    Velocities[i].z*=Scale;
+ 
+    (*Momentum).x+=Velocities[i].x;
+    (*Momentum).y+=Velocities[i].y;
+    (*Momentum).z+=Velocities[i].z;
+  }
+ 
+  // add the kinetic part of the pressure
+  Pressure+=2.0*UKinetic*NumberOfParticles/(CUBE(Box)*(3.0*NumberOfParticles));
+}
+
+void Euler(double Step,VECTOR *Momentum)
+{
+  int i;
+  double Scale;
+  VECTOR NewPositions[MAXPART];
+  
+
+  UKinetic=0.0;
+  for(i=0;i<NumberOfParticles;i++)
+  {   
+    NewPositions[i].x=Positions[i].x+Velocities[i].x*Deltat;
+    NewPositions[i].y=Positions[i].y+Velocities[i].y*Deltat;
+    NewPositions[i].z=Positions[i].z+Velocities[i].z*Deltat;
+
+    Velocities[i].x+=Forces[i].x*Deltat;
+    Velocities[i].y+=Forces[i].y*Deltat;
+    Velocities[i].z+=Forces[i].z*Deltat;
+
+    UKinetic+=0.5*(SQR(Velocities[i].x)+SQR(Velocities[i].y)+SQR(Velocities[i].z));
+  }
+  for(i=0;i<NumberOfParticles;i++)
+  {
+    PositionsNONPDB[i].x+=NewPositions[i].x-Positions[i].x;
+    PositionsNONPDB[i].y+=NewPositions[i].y-Positions[i].y;
+    PositionsNONPDB[i].z+=NewPositions[i].z-Positions[i].z;
+ 
+    Positions[i].x=NewPositions[i].x;
+    Positions[i].y=NewPositions[i].y;
+    Positions[i].z=NewPositions[i].z;
+
+    // put particles back in the box
+    // the previous position has the same transformation (Why ?)
+    if(Positions[i].x>=Box)
+    {
+      Positions[i].x-=Box;
+    }
+    else if (Positions[i].x<0.0)
+    {
+      Positions[i].x+=Box;
+    }
+ 
+    if(Positions[i].y>=Box)
+    {
+      Positions[i].y-=Box;
+    }
+    else if(Positions[i].y<0.0)
+    {
+      Positions[i].y+=Box;
+    }
+ 
+    if(Positions[i].z>=Box)
+    {
+      Positions[i].z-=Box;
+    }
+    else if(Positions[i].z<0.0)
+    {
+      Positions[i].z+=Box;
+    }
+  }
+
+  if(Step<NumberOfInitializationSteps)
+
+    // Scale=sqrt(Temperature*(3.0*NumberOfParticles-3.0)/(2.0*UKinetic));
+    Scale=sqrt(Temperature*(3.0*NumberOfParticles-4.0)/(2.0*UKinetic));
+  else
+    Scale=1.0;
+ 
+  (*Momentum).x=0.0;
+  (*Momentum).y=0.0;
+  (*Momentum).z=0.0;
+ 
+  // scale velocities and put particles back in the box
+  // beware: the old positions are also put back in the box 
+  for(i=0;i<NumberOfParticles;i++)
+  {
+    Velocities[i].x*=Scale;
+    Velocities[i].y*=Scale;
+    Velocities[i].z*=Scale;
+ 
+    (*Momentum).x+=Velocities[i].x;
+    (*Momentum).y+=Velocities[i].y;
+    (*Momentum).z+=Velocities[i].z;
+  }
+ 
+  // add the kinetic part of the pressure
+  Pressure+=2.0*UKinetic*NumberOfParticles/(CUBE(Box)*(3.0*NumberOfParticles));
+}

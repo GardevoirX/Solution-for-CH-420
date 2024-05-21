@@ -69,16 +69,16 @@ int main(void)
       // accept or reject
       if(RandomNumber()<exp(-Beta*(New-Old)))
       {  
-        Old=New;
-      }
-      // calculate average occupancy result
-      if(i>NumberOfInitializationSteps)
+        Old=New;      if(i>NumberOfInitializationSteps)
       {
         Sum+=Old;
         Count+=1.0;
         if (Old>maxold) maxold=Old;
         Distribution[Old]++;
       }
+      }
+      // calculate average occupancy result
+
     }
   }
 

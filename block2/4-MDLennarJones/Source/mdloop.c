@@ -30,11 +30,13 @@ void Mdloop(void)
   for(i=0;i<NumberOfSteps;i++)
   {
     // Calculate The Force
+    // if (i==0) Force();
     Force();
- 
+
     // integrate the equations of motion
-    Integrate(i,&Momentum);
- 
+    // Euler(i, &Momentum);
+    Integrate(i, &Momentum);
+    // VelocityVerlet(i,&Momentum);
     if(i==1)
     {
       printf("\n");
@@ -54,7 +56,7 @@ void Mdloop(void)
     // Choose a starting point to calculate the energy drift
     // Use Utot0
 
-    if(i==0)
+    if(i==NumberOfInitializationSteps)
     {
       Utot0 = UTotal;
     }
@@ -93,7 +95,8 @@ void Mdloop(void)
     //  Start Modification
     //  update the energy drift
     //  (Use dUtot.)
-    dUtot += abs((Utot0 - UTotal) / Utot0);
+    dUtot += fabs((Utot0 - UTotal) / Utot0);
+    // printf("dUtot = %lf, Utot0 = %lf, UTotal = %lf\n", abs((Utot0 - UTotal) / Utot0), Utot0, UTotal);
 
 
     //  End Modification
@@ -103,7 +106,6 @@ void Mdloop(void)
     // sample radial distribution function
 
     if((i%100)==0) SampleRDF(SAMPLE);
-    printf("Step: %d\n", i);
     SampleDiff(SAMPLE);
   }
  

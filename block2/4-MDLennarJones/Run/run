@@ -8,17 +8,24 @@ TEMP=0.8
 DELTAT=0.005
 
 # Q3: Energy drift as a function of time step
-for TEMP in #values
+for TEMP in 0.6 0.7 0.8 0.9 1 #values
 do
-for DELTAT in #values
+for NPART in 128 #values
+do
+for DELTAT in 0.001 #values
+do
+for TEMPT in 0
 do
 cat > input <<endofdata
 $BOX    $NPART $NSTEP  $TEMP  $DELTAT $NINIT
 endofdata
-time ../Source/md_nve > output
+time ../Source/md_nve > output_${TEMP}_${NPART}_${DELTAT}_${TEMPT}
 DELTAU=$(grep "Average DeltaU" output | awk '{print $NF}')
 echo $DELTAT $DELTAU >> drift-euler-$TEMP.dat
-rm input output
+tail -n 1 vacf.dat >> vacf_collection.dat
+# rm input output
+done
+done
 done
 done
 exit

@@ -44,6 +44,8 @@ void SampleRDF(int Ichoise);
 void SampleDiff(int Switch);
 void Force(void);
 void Integrate(double Step,VECTOR *Momentum);
+void VelocityVerlet(double Step,VECTOR *Momentum);
+void Euler(double Step,VECTOR *Momentum);
 void Readdat(void);
 void Init(void);
 void Mdloop(void);
