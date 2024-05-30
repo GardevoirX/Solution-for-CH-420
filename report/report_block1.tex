@@ -43,15 +43,15 @@ The mode of this distribution is $(n+1)/p$. Thus when the number of compartments
 N/P >> 1?}
 The number of ways to placing these particles into compartments is
 
-$${n+p-1\choose p-1}.$$
+$${n+p-1\choose n}.$$
 
 The number of ways to ensure that at least one particle is in each compartment is
 
-$${n-1\choose p-1}.$$
+$${n+p-2\choose n}.$$
 
 Thus the probability to find at least one empty box is
 
-$$1-\frac{{n-1\choose p-1}}{{n+p-1\choose p-1}}=\frac{(n-p+1)(n-p+2)\cdots n}{n(n+1)(n+2)\cdots (n+p-1)}\rightarrow 0,\ as\ n\rightarrow \infty$$
+$$1-\frac{{n+p-2\choose n}}{{n+p-1\choose n}}=\frac{p-1}{n+p-1}=\frac{1}{n}\frac{p-1}{1+\frac{p-1}{n}}=\frac{p^2-2p+1}{n^2} \rightarrow 0,\ as\ n\rightarrow \infty$$
 
 \bigskip
 
@@ -66,11 +66,18 @@ The occupancy of a certain level can be calculated by
 $$ O_i=\frac{g_i\times \exp{-\frac{E_i}{k_BT}}}{Q}$$
 
 where $g_i$ is the degeneracy of energy levels, $i$ is the energy level, $E_i$ is its energy, $k_B$ is
-the Boltzmann constant and $Q$ is the partition function. When at high temperatures, we have
+the Boltzmann constant and $Q$ is the partition function. This is realized in Figure \ref{fig:boltzmann_modify}. When at high temperatures, we have
 
 $$ O_i\rightarrow \frac{g_i}{Q},\ as\ T\rightarrow\infty$$
 
 the occupancy is propotional to the degeneracy.
+
+\begin{figure}
+  \centering
+  \includegraphics[]{../block1/2-BoltzmannDistribution/Results/modify_0.png}
+  \caption{Calculation of occupancy for non-degenerate system.}
+  \label{fig:boltzmann_modify}
+\end{figure}
 
 Thus, for the non-degenerate system, the occupancy of different level is close to the same at high temperature, as shown in Figure \ref{fig:boltzmann_rotor}.
 
@@ -93,7 +100,14 @@ Thus, for the non-degenerate system, the occupancy of different level is close t
 
 \questionpart{Change the program in such a way that the degeneracy of energy level i equals i + 1.
 What do you see?}
-For the degenerate system for which the degeneracy of level $i$ is $i+1$, the higher energy level is more occupied, as shown in Figure \ref{fig:boltzmann_rotor_degeneracy}.
+For the degenerate system for which the degeneracy of level $i$ is $i+1$ (Figure \ref{fig:boltzmann_modify1}), the higher energy level is more occupied, as shown in Figure \ref{fig:boltzmann_rotor_degeneracy}.
+
+\begin{figure}
+  \centering
+  \includegraphics[]{../block1/2-BoltzmannDistribution/Results/modify_1.png}
+  \caption{Calculation of occupancy for degenerate system.}
+  \label{fig:boltzmann_modify1}
+\end{figure}
 
 \begin{figure}
   \centering
@@ -119,7 +133,14 @@ $$Q=\frac{2I}{\beta\hbar^2}=\frac{2}{\beta},\ \frac{I}{\hbar^2}=1$$
 
 which holds when $\Theta_r/T\leq 0.01$, where $\Theta_r=\frac{\hbar^2}{2I}=\frac{1}{2}$
 
-Let's check this. In Table \ref{tab:partation function}, we compare the partation function calculated by the analytical expression and the partation function calculated from the simulation result. The result shown that the approximate result is close to the simulation result when $\Theta_r/T\leq 0.01$.
+Let's check this. The simulation is done by using the code shown in Figure \ref{fig:boltzmann_modify2}. In Table \ref{tab:partation function}, we compare the partation function calculated by the analytical expression and the partation function calculated from the simulation result. The result shown that the approximate result is close to the simulation result when $\Theta_r/T\leq 0.01$.
+
+\begin{figure}
+  \centering
+  \includegraphics[]{../block1/2-BoltzmannDistribution/Results/modify_2.png}
+  \caption{Calculation of occupancy for linear rotor system.}
+  \label{fig:boltzmann_modify2}
+\end{figure}
 
 \begin{table}[]
   \centering
@@ -267,20 +288,12 @@ $$
 \end{figure}
 \questionpart{Modify the program in such a way that the probability to jump in one direction
 equals 0.8. What happens?}
-Below is the result of tuning the probability of taking a move to 0.8 (Figure \ref{fig:gaussian_comparison_impeded} and Figure \ref{fig:diffusivity_random_walk_impeded}). It can be seen that the effective step calculated from the coefficient is about 8, and the diffusion constant is also decreased to its 80\%.
-$$
-D_d = \frac{1}{2d}\lim_{t\rightarrow \infty}\frac{d}{dt}MSD(r_d)=0.40
-$$
-\begin{figure}
-  \centering
-  \includegraphics[width=0.5\linewidth]{../block1/4-RandomWalk1D/Results/Figure_3.png}
-  \caption{The diffusivity of the particle.}
-  \label{fig:gaussian_comparison_impeded}
-\end{figure}
+The result of tuning the probability of taking a move to the right to 0.8 is shown in Figure \ref{fig:diffusivity_random_walk_impeded}. You can see that the MSD curve is like a quadric curve, which means that the mean displacement is propotional to the time, and that is to say the particle has a net velocity.
+
 \begin{figure}
   \centering
   \includegraphics[width=0.5\linewidth]{../block1/4-RandomWalk1D/Results/Figure_4.png}
-  \caption{The diffusivity of the particle.}
+  \caption{The diffusivity of the particle after we modified the jump probability.}
   \label{fig:diffusivity_random_walk_impeded}
 \end{figure}
 \end{document}
